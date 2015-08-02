@@ -5,12 +5,10 @@ var EventEmitter = require('events').EventEmitter;
 
 var Value = cerebral.Value;
 
-var Factory = function (initialState, defaultArgs) {
+var Factory = function (initialState, defaultArgs, options) {
 
   var eventEmitter = new EventEmitter();
-  var tree = new Baobab(initialState);
-
-  console.log(tree.get());
+  var tree = new Baobab(initialState, options || {});
 
   var controller = cerebral.Controller({
     defaultArgs: defaultArgs,

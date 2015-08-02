@@ -42,8 +42,13 @@ const defaultArgs = {
   }
 };
 
+// Baobab options
+const options = {
+  validate: function () {}
+};
+
 // Instantiate the controller
-export default Controller(state, defaultArgs);
+export default Controller(state, defaultArgs, options);
 ```
 
 *main.js*
