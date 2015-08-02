@@ -7,14 +7,16 @@ var Value = cerebral.Value;
 
 var Factory = function (initialState, defaultArgs, options) {
 
+  options = options || {};
+  options.syncwrite = true;
+
   var eventEmitter = new EventEmitter();
-  var tree = new Baobab(initialState, options || {});
+  var tree = new Baobab(initialState, options);
 
   var controller = cerebral.Controller({
     defaultArgs: defaultArgs,
     onReset: function () {
       tree.set(initialState);
-      tree.commit();
     },
     onGetRecordingState: function () {
 
@@ -23,11 +25,9 @@ var Factory = function (initialState, defaultArgs, options) {
 
     },
     onUpdate: function () {
-      tree.commit();
       eventEmitter.emit('change', tree.get());
     },
     onRemember: function () {
-      tree.commit();
       eventEmitter.emit('remember', tree.get());
     },
     onGet: function (path) {

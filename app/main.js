@@ -10,6 +10,7 @@ const controller = Controller({
 
 controller.signal('test', function AddBar (args, state) {
   state.push('list', 'bar');
+  console.log(state.get('list'));
 });
 
 @Decorator({
