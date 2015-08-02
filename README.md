@@ -278,4 +278,8 @@ const onChange = function (state) {
 };
 controller.eventEmitter.on('change', onChange);
 controller.eventEmitter.removeListener('change', onChange);
+
+// When debugger traverses state
+controller.eventEmitter.on('remember', onChange);
+controller.eventEmitter.removeListener('remember', onChange);
 ```
