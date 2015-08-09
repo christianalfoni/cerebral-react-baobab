@@ -72,6 +72,7 @@ var Factory = function (initialState, defaultArgs, options) {
 
   controller.injectInto = function (AppComponent) {
     return React.createElement(React.createClass({
+      displayName: 'CerebralContainer',
       childContextTypes: {
         controller: React.PropTypes.object.isRequired
       },
@@ -170,6 +171,7 @@ var Render = function (Component) {
 Factory.Decorator = function (paths) {
   return function (Component) {
     return React.createClass({
+      displayName: Component.name + 'Container',
       mixins: [Factory.Mixin],
       getStatePaths: function () {
         return paths || {};
@@ -181,6 +183,7 @@ Factory.Decorator = function (paths) {
 
 Factory.HOC = function (Component, paths) {
   return React.createClass({
+    displayName: Component.name + 'Container',
     mixins: [Factory.Mixin],
     getStatePaths: function () {
       return paths || {};

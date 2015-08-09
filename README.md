@@ -61,106 +61,24 @@ React.render(controller.injectInto(AppComponent), document.body);
 ```
 With Baobab you can also use facets. Read more about that [here](https://github.com/Yomguithereal/baobab/issues/278).
 
-### Create signals and actions
-Actions is where it all happens. This is where you define mutations to your application state based on information sent from the VIEW layer. Actions are pure functions that can run synchronously and asynchronously. They are easily reused across signals and can easily be tested.
+### Creating signals
+Creating actions are generic. It works the same way across all packages. Please read about actions at the [Cerebral Repo - Actions](https://github.com/christianalfoni/cerebral#how-to-get-started). You can also watch [a video on creating actions](https://www.youtube.com/watch?v=ylJG4vUx_Tc) to get an overview of how it works.
 
-In larger application you should consider putting each action in its own file.
+Typically you would create your signals in the *main.js* file, but you can split them out as you see fit.
 
-*actions.js*
+*main.js*
 ```js
-export default {
-  // Define an action with a function. It receives two arguments when run
-  // synchronously
-  setLoading(args, state) {
-    state.set('isLoading', true);
-  },
+import React from 'react';
+import AppComponent from './AppComponent.js';
+import controller from './controller.js';
 
-  // There are many types of mutations you can do, "set" is just one of them
-  unsetLoading(args, state) {
-    state.set('isLoading', false);
-  },
+import setLoading from './actions/setLoading.js';
+import saveForm from './actions/saveForm.js';
+import unsetLoading from './actions/unsetLoading.js';
 
-  // When an action is run asynchronously it receives a third argument,
-  // a promise you can either resolve or reject. In this example we
-  // are using an ajax util we passed as a default argument and an argument
-  // we passed when the signal was triggered
-  saveForm(args, state, promise) {
-    args.utils.ajax.post('/form', args.formData, function (err, response) {
-      promise.resolve();
-    });
-  };  
-};
-```
-
-*controller.js*
-```js
-...
-// The saveForm action runs async because it is in an array. You can have multiple
-// actions in one array that runs async in parallel.
 controller.signal('formSubmitted', setLoading, [saveForm], unsetLoading);
 
-export default controller
-```
-
-### Mutations
-You can do any traditional mutation to the state, the signature is just a bit different. You call the kind of mutation first, then the path and then an optional value. The path can either be a string or an array for nested paths. Depending on the size of your application you might consider putting each action in its own file.
-
-*actions/someAction.js*
-```js
-export default function someAction (args, state) {
-  state.set('isLoading', false);
-  state.unset('isLoading');
-  state.merge('user', {name: 'foo'});
-  state.push('list', 'foo');
-  state.unshift('list', 'bar');
-  state.pop('list');
-  state.shift('list');
-  state.concat('list', [1, 2, 3]);
-  state.splice('list', 1, 1, [1]);
-
-  // Use an array as path to reach nested values
-  state.push(['admin', 'users'], {foo: 'bar'});
-
-};
-```
-
-### Get state in actions
-*actions/someAction.js*
-```js
-export default function someAction (args, state) {
-  const isLoading = state.get('isLoading');
-};
-```
-
-### Async actions
-Async actions are not able to mutate state, so the **state** argument only has the `get()` method. You have to **resolve** or **reject** any values to the next action to do mutations.
-*actions/someAction.js*
-```js
-export default function someAction (args, state, promise) {
-  args.utils.ajax('/foo', function (err, result) {
-    if (err) {
-      promise.reject({error: err});
-    } else {
-      promise.resolve({result: result});
-    }
-  })
-};
-```
-You can optionally redirect resolved and rejected async actions to different actions by inserting an object as the last entry in the async array definition.
-
-*controller.js*
-```js
-...
-controller.signal('formSubmitted',
-  setLoading,
-  [saveForm, {
-    resolve: [closeModal],
-    reject: [setFormError]
-  }],
-  unsetLoading
-);
-
-export default Controller(state, defaultArgs);
+React.render(controller.injectInto(AppComponent), document.body);
 ```
 
 ### Get state in components
@@ -168,7 +86,7 @@ export default Controller(state, defaultArgs);
 #### Decorator
 ```js
 import React from 'react';
-import {Decorator as Cerebral} from 'cerebral-react-baobab';
+import {Decorator as Cerebral} from 'cerebral-react-immutable-store';
 
 @Cerebral({
   isLoading: ['isLoading'],
@@ -193,7 +111,7 @@ class App extends React.Component {
 #### Higher Order Component
 ```js
 import React from 'react';
-import {HOC} from 'cerebral-react-baobab';
+import {HOC} from 'cerebral-react-immutable-store';
 
 class App extends React.Component {
   componentDidMount() {
@@ -219,7 +137,7 @@ App = HOC(App, {
 #### Mixin
 ```js
 import React from 'react';
-import {Mixin} from 'cerebral-react-baobab';
+import {Mixin} from 'cerebral-react-immutable-store';
 
 const App = React.createClass({
   mixins: [Mixin],
@@ -247,7 +165,7 @@ const App = React.createClass({
 ### Recording
 ```js
 import React from 'react';
-import {Decorator as Cerebral} from 'cerebral-react-baobab';
+import {Decorator as Cerebral} from 'cerebral-react-immutable-store';
 
 @Cerebral()
 class App extends React.Component {
@@ -283,8 +201,17 @@ const onChange = function (state) {
 };
 controller.eventEmitter.on('change', onChange);
 controller.eventEmitter.removeListener('change', onChange);
+```
 
-// When debugger traverses state
-controller.eventEmitter.on('remember', onChange);
-controller.eventEmitter.removeListener('remember', onChange);
+### Listening to errors
+You can listen to errors in the controller. Now, Cerebral helps you a lot to avoid errors, but there are probably scenarios you did not consider. By using the error event you can indicate messages to the user and pass these detailed error messages to a backend service. This lets you quickly fix bugs in production.
+
+*main.js*
+```js
+...
+const onError = function (error) {
+  controller.signals.errorOccured({error: error.message});
+  myErrorService.post(error);
+};
+controller.eventEmitter.on('error', onError);
 ```
