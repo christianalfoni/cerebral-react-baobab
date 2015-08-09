@@ -5,12 +5,19 @@ const Decorator = Controller.Decorator;
 
 const controller = Controller({
   list: ['foo'],
+  $list2: {
+    cursors: {
+      list: ['list']
+    },
+    get({list}) {
+      return list.map((item) => item + ' hihihi');
+    }
+  },
   foo: 'bar'
 });
 
 controller.signal('test', function AddBar (args, state) {
   state.push('list', 'bar');
-  console.log(state.get('list'));
 });
 
 @Decorator({
@@ -30,12 +37,12 @@ class App extends React.Component {
 }
 
 @Decorator({
-  list: ['list']
+  list: ['list'],
+  list2: ['$list2']
 })
 class List extends React.Component {
   render() {
-    console.log('Rendering list');
-    return <ul>{this.props.list.map((item, i) => <li key={i}>{item}</li>)}</ul>;
+    return <ul>{this.props.list2.map((item, i) => <li key={i}>{item}</li>)}</ul>;
   }
 }
 

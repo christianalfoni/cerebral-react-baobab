@@ -4,6 +4,20 @@ var Baobab = require('baobab');
 var EventEmitter = require('events').EventEmitter;
 
 var Value = cerebral.Value;
+var updateTree = function (tree, state, path) {
+  Object.keys(state).forEach(function (key) {
+    if (key[0] === '$') {
+      return;
+    }
+    path.push(key);
+    if (!Array.isArray(state[key]) && typeof state[key] === 'object' && state[key] !== null) {
+      updateTree(tree, state[key], path)
+    } else {
+      tree.set(path, state[key])
+    }
+    path.pop();
+  });
+};
 
 var Factory = function (initialState, defaultArgs, options) {
 
@@ -12,11 +26,12 @@ var Factory = function (initialState, defaultArgs, options) {
 
   var eventEmitter = new EventEmitter();
   var tree = new Baobab(initialState, options);
+  initialState = tree.get();
 
   var controller = cerebral.Controller({
     defaultArgs: defaultArgs,
     onReset: function () {
-      tree.set(initialState);
+      updateTree(tree, initialState, [])
     },
     onGetRecordingState: function () {
 
