@@ -62,7 +62,7 @@ React.render(controller.injectInto(AppComponent), document.body);
 With Baobab you can also use facets. Read more about that [here](https://github.com/Yomguithereal/baobab/issues/278).
 
 ### Creating signals
-Creating actions are generic. It works the same way across all packages. Please read about actions at the [Cerebral Repo - Actions](https://github.com/christianalfoni/cerebral#how-to-get-started). You can also watch [a video on creating actions](https://www.youtube.com/watch?v=ylJG4vUx_Tc) to get an overview of how it works.
+Creating actions are generic. It works the same way across all packages. Please read about actions at the [Cerebral Repo - Actions](https://github.com/christianalfoni/cerebral#how-to-get-started). You can also watch [a video on signals](https://www.youtube.com/watch?v=zkeBjGdn7uM) to get an overview of how it works.
 
 Typically you would create your signals in the *main.js* file, but you can split them out as you see fit.
 
