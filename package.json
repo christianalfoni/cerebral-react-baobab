@@ -1,6 +1,6 @@
 {
   "name": "cerebral-react-baobab",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A Cerebral package for React and Baobab",
   "main": "index.js",
   "scripts": {

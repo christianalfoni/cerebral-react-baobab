@@ -74,14 +74,14 @@ var Factory = function (initialState, defaultArgs, options) {
         return existingValue;
       });
     },
-    onShift: function (path, value) {
+    onShift: function (path) {
       tree.apply(path, function (existingValue) {
-        existingValue.shift(value);
+        existingValue.shift();
         return existingValue;
       });
     },
-    onUnshift: function (path) {
-      tree.unshift(path);
+    onUnshift: function (path, value) {
+      tree.unshift(path, value);
     }
   });
 
