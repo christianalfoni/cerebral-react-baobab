@@ -24,8 +24,7 @@
   "homepage": "https://github.com/christianalfoni/cerebral-react-baobab",
   "peerDependencies": {
     "react": "^0.13.3",
-    "baobab": "^2.0.0-dev13",
-    "cerebral-react-immutable-store": "^0.5.1" 
+    "baobab": "^2.0.0-dev13"
   },
   "dependencies": {
     "cerebral": "^0.14.0"
