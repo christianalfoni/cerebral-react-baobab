@@ -86,7 +86,7 @@ React.render(controller.injectInto(AppComponent), document.body);
 #### Decorator
 ```js
 import React from 'react';
-import {Decorator as Cerebral} from 'cerebral-react-immutable-store';
+import {Decorator as Cerebral} from 'cerebral-react-baobab';
 
 @Cerebral({
   isLoading: ['isLoading'],
@@ -111,7 +111,7 @@ class App extends React.Component {
 #### Higher Order Component
 ```js
 import React from 'react';
-import {HOC} from 'cerebral-react-immutable-store';
+import {HOC} from 'cerebral-react-baobab';
 
 class App extends React.Component {
   componentDidMount() {
@@ -137,7 +137,7 @@ App = HOC(App, {
 #### Mixin
 ```js
 import React from 'react';
-import {Mixin} from 'cerebral-react-immutable-store';
+import {Mixin} from 'cerebral-react-baobab';
 
 const App = React.createClass({
   mixins: [Mixin],
@@ -165,7 +165,7 @@ const App = React.createClass({
 ### Recording
 ```js
 import React from 'react';
-import {Decorator as Cerebral} from 'cerebral-react-immutable-store';
+import {Decorator as Cerebral} from 'cerebral-react-baobab';
 
 @Cerebral()
 class App extends React.Component {
